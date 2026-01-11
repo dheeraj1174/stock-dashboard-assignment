@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Data Intelligence Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+        }
+
+        .sidebar button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        canvas {
+            max-width: 900px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h3>Companies</h3>
+        <button onclick="loadStock('INFY.NS')">INFY</button>
+        <button onclick="loadStock('TCS.NS')">TCS</button>
+        <button onclick="loadStock('RELIANCE.NS')">RELIANCE</button>
+        <button onclick="loadStock('HDFCBANK.NS')">HDFCBANK</button>
+    </div>
+
+    <div class="content">
+        <h2 id="title">Select a company</h2>
+        <canvas id="stockChart"></canvas>
+    </div>
+
+    <script>
+        let chart = null;
+
+        async function loadStock(symbol) {
+            document.getElementById("title").innerText = symbol + " - Last 30 Days";
+
+            const response = await fetch(`http://127.0.0.1:8000/data/${symbol}`);
+            const data = await response.json();
+
+            const labels = data.map(item => item.Date);
+            const prices = data.map(item => item.Close);
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const ctx = document.getElementById("stockChart").getContext("2d");
+
+            chart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Closing Price",
+                        data: prices,
+                        borderWidth: 2
+                    }]
+                }
+            });
+        }
+    </script>
+
+</body>
+</h
