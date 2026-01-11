@@ -63,34 +63,53 @@
     <script>
         let chart = null;
 
+        // 🔴 CHANGE THIS TO YOUR RENDER BACKEND URL
+        const API_BASE = "https://stock-dashboard-assignment.onrender.com/";
+
         async function loadStock(symbol) {
-            document.getElementById("title").innerText = symbol + " - Last 30 Days";
+            try {
+                document.getElementById("title").innerText = symbol + " - Last 30 Days";
 
-            const response = await fetch(`http://127.0.0.1:8000/data/${symbol}`);
-            const data = await response.json();
+                const response = await fetch(`${API_BASE}/data/${symbol}`);
 
-            const labels = data.map(item => item.Date);
-            const prices = data.map(item => item.Close);
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            const ctx = document.getElementById("stockChart").getContext("2d");
-
-            chart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "Closing Price",
-                        data: prices,
-                        borderWidth: 2
-                    }]
+                if (!response.ok) {
+                    throw new Error("API request failed");
                 }
-            });
+
+                const data = await response.json();
+
+                const labels = data.map(item => item.Date);
+                const prices = data.map(item => item.Close);
+
+                if (chart) {
+                    chart.destroy();
+                }
+
+                const ctx = document.getElementById("stockChart").getContext("2d");
+
+                chart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Closing Price",
+                            data: prices,
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading stock data:", error);
+                alert("Failed to load stock data. Please try again.");
+            }
         }
     </script>
 
 </body>
-</h
+
+</html>
