@@ -1,6 +1,8 @@
 # 📈 Stock Data Intelligence Dashboard
 
-A mini financial data platform built as part of the **Internship Assignment – Stock Data Intelligence Dashboard**.  
+A mini financial data platform built as part of the **Assignment – Stock Data Intelligence Dashboard**.  
+
+
 This project demonstrates real-world skills in **data collection, data processing, REST API development, and visualization** using Python.
 
 ---
